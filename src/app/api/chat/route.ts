@@ -25,7 +25,7 @@ ${dbContext}
 Answer the user's questions based on this data.`;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-oss-120b",
+      model: process.env.AI_MODEL || "llama3.1-8b",
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: message }
