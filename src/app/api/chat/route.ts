@@ -2,13 +2,13 @@ import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { getAllTasks } from '@/lib/db';
 
-const openai = new OpenAI({
-  apiKey: process.env.CEREBRAS_API_KEY || process.env.OPENAI_API_KEY, 
-  baseURL: "https://api.cerebras.ai/v1", // Cerebras endpoint
-});
-
 export async function POST(request: Request) {
   try {
+    const openai = new OpenAI({
+      apiKey: process.env.CEREBRAS_API_KEY || process.env.OPENAI_API_KEY, 
+      baseURL: "https://api.cerebras.ai/v1", // Cerebras endpoint
+    });
+
     const { message } = await request.json();
     
     // Get database context
