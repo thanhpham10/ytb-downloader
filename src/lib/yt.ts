@@ -21,7 +21,22 @@ export function startDownload(taskId: string, url: string, format: 'mp3' | 'mp4'
     url,
     '--newline', // Force newline output so we can parse progress
     '-o', outputTemplate,
+    '--js-runtimes', 'node', // Tell yt-dlp to use Node.js as the JS runtime
   ];
+
+  // Handle YouTube cookies to bypass bot detection (429 / Sign in)
+  const cookiesB64 = process.env.YOUTUBE_COOKIES_B64;
+  const tempCookiesPath = path.join('/tmp', `cookies_${taskId}.txt`);
+  
+  if (cookiesB64) {
+    try {
+      const cookiesText = Buffer.from(cookiesB64, 'base64').toString('utf-8');
+      fs.writeFileSync(tempCookiesPath, cookiesText);
+      args.push('--cookies', tempCookiesPath);
+    } catch (err) {
+      console.error('Failed to parse YOUTUBE_COOKIES_B64:', err);
+    }
+  }
 
   if (format === 'mp3') {
     args.push('-x', '--audio-format', 'mp3');
@@ -56,6 +71,15 @@ export function startDownload(taskId: string, url: string, format: 'mp3' | 'mp4'
   });
 
   ytProcess.on('close', (code) => {
+    // Clean up temporary cookies file if it exists
+    if (fs.existsSync(tempCookiesPath)) {
+      try {
+        fs.unlinkSync(tempCookiesPath);
+      } catch (err) {
+        console.error('Failed to delete temp cookies file:', err);
+      }
+    }
+
     if (code === 0) {
       updateTask(taskId, { status: 'completed', progress: 100 });
       // Might need to update filePath again if FFmpeg changed extension during muxing
