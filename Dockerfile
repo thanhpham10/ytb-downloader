@@ -1,8 +1,8 @@
 FROM node:20-slim
 
-# Install Python (for yt-dlp) and FFmpeg
+# Install Python (for yt-dlp), FFmpeg, and build tools (for native npm modules like better-sqlite3)
 RUN apt-get update && \
-    apt-get install -y python3 curl ffmpeg && \
+    apt-get install -y python3 curl ffmpeg build-essential && \
     rm -rf /var/lib/apt/lists/*
 
 # Install yt-dlp binary directly
