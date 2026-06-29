@@ -22,6 +22,7 @@ export function startDownload(taskId: string, url: string, format: 'mp3' | 'mp4'
     '--newline', // Force newline output so we can parse progress
     '-o', outputTemplate,
     '--js-runtimes', 'node', // Tell yt-dlp to use Node.js as the JS runtime
+    '--user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
   ];
 
   // Handle YouTube cookies to bypass bot detection (429 / Sign in)
