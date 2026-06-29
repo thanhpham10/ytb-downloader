@@ -3,7 +3,7 @@ import OpenAI from 'openai';
 import { getAllTasks } from '@/lib/db';
 
 const openai = new OpenAI({
-  apiKey: "csk-kw5yn3d6hy3cxpyjkvtyy4c8mt4jjth4cheyvx8nrwcx84r9", // User provided key
+  apiKey: process.env.CEREBRAS_API_KEY || process.env.OPENAI_API_KEY, 
   baseURL: "https://api.cerebras.ai/v1", // Cerebras endpoint
 });
 
