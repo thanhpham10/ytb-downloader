@@ -1,13 +1,17 @@
 FROM node:20-slim
 
-# Install Python (for yt-dlp), FFmpeg, and build tools (for native npm modules like better-sqlite3)
+# Install Python, FFmpeg, build tools, unzip (for deno), and python3-pip
 RUN apt-get update && \
-    apt-get install -y python3 curl ffmpeg build-essential && \
+    apt-get install -y python3 python3-pip curl ffmpeg build-essential unzip && \
     rm -rf /var/lib/apt/lists/*
 
-# Install yt-dlp binary directly
-RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp && \
-    chmod a+rx /usr/local/bin/yt-dlp
+# Install Deno (strongly recommended by yt-dlp for EJS challenge solving)
+RUN curl -fsSL https://github.com/denoland/deno/releases/latest/download/deno-x86_64-unknown-linux-gnu.zip -o deno.zip && \
+    unzip deno.zip -d /usr/local/bin && \
+    rm deno.zip
+
+# Install yt-dlp via pip3 to ensure all required EJS assets are packaged
+RUN pip3 install --break-system-packages -U "yt-dlp[default]"
 
 WORKDIR /app
 
