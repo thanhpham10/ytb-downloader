@@ -21,7 +21,7 @@ export function startDownload(taskId: string, url: string, format: 'mp3' | 'mp4'
     url,
     '--newline', // Force newline output so we can parse progress
     '-o', outputTemplate,
-    '--js-runtimes', 'node', // Tell yt-dlp to use Node.js as the JS runtime
+    '--js-runtimes', `node:${process.execPath}`, // Tell yt-dlp exactly where Node.js is
     '--user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
   ];
 
